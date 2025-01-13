@@ -11,10 +11,10 @@ The model ensures further that
 - All domino tiles are used
 - Each field is covered
 
-With 18 Domino sets you can already achieve the following (and puzzle it at home):
+With 24 Domino sets you can already achieve the following (and puzzle it at home):
 <p align="center">
   <img src="assets/Einstein.jpg" alt="Original Einstein" height="400px" />
-  <img src="assets/Einstein_18_sets.png" alt="Domino Einstein" height="400px" />
+  <img src="assets/Einstein_24_sets.png" alt="Domino Einstein" height="400px" />
 </p>
 
 ---
