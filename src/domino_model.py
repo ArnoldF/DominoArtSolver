@@ -32,8 +32,6 @@ class DominoModel:
         self._create_objectives()
         self._create_constraints()
 
-        #self.construct_warm_start()
-
     def _create_variables(self):
         # Define binary variables for each combination of domino and placement
         variables = dict()
@@ -106,58 +104,3 @@ class DominoModel:
             )
 
         return solution
-
-
-    def construct_warm_start(self):
-        warm_start_solution = {}
-
-        # if the number of column is even, use all horizontal placements
-        if self._cols % 2 == 0:
-            placements = [((x, y), (x, y + 1)) for x in range(self._rows) for y in range(self._cols - 1)]
-        else:  # use all vertical placements
-            placements = [((x, y), (x + 1, y)) for x in range(self._rows) for y in range(self._cols)]
-
-        # Compute brightness for each placement
-        placement_brightness = {
-            p: self._brightness_grid[p[0][0]][p[0][1]] + self._brightness_grid[p[1][0]][p[1][1]]
-            for p in placements
-        }
-
-        # Sort placements by brightness in descending order
-        sorted_placements = sorted(
-            placement_brightness.items(),
-            key=lambda item: item[1],
-            reverse=True
-        )
-
-        # Sort domino tiles by the sum of numbers on both sides in descending order
-        sorted_dominoes = sorted(
-            self._domino_tiles.items(),
-            key=lambda item: sum(item[1]),
-            reverse=True
-        )
-
-        # Keep track of used placements and tiles
-        used_placements = set()
-        used_dominoes = set()
-
-        # Assign tiles to placements
-        for domino, (num1, num2) in sorted_dominoes:
-            for placement, _ in sorted_placements:
-                if placement not in used_placements:
-                    warm_start_solution[(domino, placement)] = 1
-                    used_placements.add(placement)
-                    used_dominoes.add(domino)
-                    break
-
-        # Fill in 0 for unused domino-placement pairs
-        for domino in self._domino_tiles:
-            for placement in placements:
-                if (domino, placement) not in warm_start_solution:
-                    warm_start_solution[(domino, placement)] = 0
-
-        # Apply the warm start solution to the variables
-        for (domino, place), value in warm_start_solution.items():
-            self._variables["domino_at_place"][domino, place].setInitialValue(value)
-
-        # return warm_start_solution
